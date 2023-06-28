@@ -1,3 +1,4 @@
+var repoNameEl = document.querySelector("#repo-name");
 var issueContainerEl = document.querySelector("#issues-container");
 var limitWarningEl = document.querySelector("#limit-warning");
 
@@ -16,18 +17,6 @@ var getRepoIssues = function(repo) {
           alert("There was a problem with your request!");
         }
       });
-
-      if (response.ok) {
-        response.json().then(function(data) {
-          displayIssues(data);
-      
-          // check if api has paginated issues
-          if (response.headers.get("Link")) {
-            console.log(displayWarning(repo));
-          }
-        });
-      }
-    console.log(repo);
   };
 
   var displayIssues = function(issues) {
@@ -38,6 +27,9 @@ var getRepoIssues = function(repo) {
     for (var i = 0; i < issues.length; i++) {
         // create a link element to take users to the issue on github
         var issueEl = document.createElement("a");
+        issueEl.classList = "list-item flex-row justify-space-between align-center";
+        issueEl.setAttribute("href", issues[i].html_url);
+        issueEl.setAttribute("target", "_blank");
         // create span to hold issue title
         var titleEl = document.createElement("span");
         titleEl.textContent = issues[i].title;
@@ -57,12 +49,11 @@ var getRepoIssues = function(repo) {
 
         // append to container
         issueEl.appendChild(typeEl);
-        issueEl.classList = "list-item flex-row justify-space-between align-center";
-        issueEl.setAttribute("href", issues[i].html_url);
-        issueEl.setAttribute("target", "_blank");
+
         issueContainerEl.appendChild(issueEl);
     }
   };
+  
   var displayWarning = function(repo) {
     var linkEl = document.createElement("a");
     linkEl.textContent = "See More Issues on GitHub.com";
